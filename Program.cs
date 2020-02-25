@@ -62,7 +62,7 @@ namespace Lab8_OS_Dimchuk
                 if (function == "D")
                 {
                     Console.WriteLine("\nDeallocating process " + processId);
-                    GenericDeallocation(processId);
+                    Deallocate(processId);
 
                 }
                 else if (function == "A") //option 1 - allocate a memory with id PID, that's size MEMORY_SIZE. Unit would be in KBs.
@@ -143,11 +143,8 @@ namespace Lab8_OS_Dimchuk
 
         /*      DEALLOCATION METHODS      */
 
-        static void Deallocate_First(int id)
+        static void Deallocate(int id)
         {
-            //filledSize -= size;
-            //always check the neighbours to see if you can merge empty blocks
-
             var current = memory.First;
             while(current != null)
             {
@@ -225,18 +222,6 @@ namespace Lab8_OS_Dimchuk
 
         }
 
-        static void Deallocate_Best(int id)
-        {
-            //filledSize -= size;
-            //always check the neighbours to see if you can merge empty blocks
-        }
-
-        static void Deallocate_Worst(int id)
-        {
-            //filledSize -= size;
-            //always check the neighbours to see if you can merge empty blocks
-        }
-
 
         /*      GENERIC FUNCTIONALITY METHODS      */
 
@@ -257,23 +242,6 @@ namespace Lab8_OS_Dimchuk
                 Console.WriteLine("[" + start + " - " + end + "]" + " - " + id + state + " size: " + size);
 
                 current = current.Next;
-            }
-        }
-
-
-        static void GenericDeallocation(int id)
-        {
-            if (type == AlgorithmType.First)
-            {
-                Deallocate_First(id);
-            }
-            else if (type == AlgorithmType.Best)
-            {
-                Deallocate_Best(id);
-            }
-            else if (type == AlgorithmType.Worst)
-            {
-                Deallocate_Worst(id);
             }
         }
 
