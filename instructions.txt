@@ -1,0 +1,37 @@
+Create a simple memory manager in Java or C.
+
+should run 3 algorithms:
+1. first fit
+2. best fit
+3. worst fit
+
+
+program takes a file as input (command line arguments). The file is in this format:
+
+1st line: number between 1 and 3, representing 1 = first fit, 2 = best fit, 3 = worst fit
+2nd line: total size of memory in KBs
+All other lines in one of these formats:
+		option 1) A PID MEMORY_SIZE
+		option 2) D PID
+		option 3) P
+		
+	option 1 - allocate a memory with id PID, that's size MEMORY_SIZE. Unit would be in KBs.
+	option 2 - deallocate memory for process with id PID
+	option 3 - print out current state of memory (allocations and free spaces)
+	
+	
+Sample file:
+
+
+2
+16384
+A 1 210
+A 2 1450
+A 3 8000
+D 2
+P
+A 2 900
+D 1
+D 3
+A 4 800
+P
