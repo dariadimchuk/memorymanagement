@@ -96,7 +96,7 @@ namespace Lab8_OS_Dimchuk
                 nodeToMake.startIndex = 0;
                 memory.AddBefore(memory.First, nodeToMake);
                 memory.First.Next.Value.startIndex = nodeToMake.size + 1;
-                memory.First.Next.Value.size -= nodeToMake.size + 1;
+                memory.First.Next.Value.size -= (nodeToMake.size + 1);
                 success = true;
             }
             else
@@ -112,7 +112,7 @@ namespace Lab8_OS_Dimchuk
                         memory.AddBefore(current, nodeToMake);
 
                         current.Value.startIndex = nodeToMake.size + 1 + nodeToMake.startIndex;
-                        current.Value.size -= nodeToMake.size + 1;
+                        current.Value.size -= (nodeToMake.size + 1);
 
                         success = true;
                         break;
@@ -147,7 +147,7 @@ namespace Lab8_OS_Dimchuk
                 nodeToMake.startIndex = 0;
                 memory.AddBefore(memory.First, nodeToMake);
                 memory.First.Next.Value.startIndex = nodeToMake.size + 1;
-                memory.First.Next.Value.size -= nodeToMake.size + 1;
+                memory.First.Next.Value.size -= (nodeToMake.size + 1);
                 return;
             }
             else
@@ -188,7 +188,7 @@ namespace Lab8_OS_Dimchuk
                 memory.AddBefore(bestNodeFound, nodeToMake);
 
                 bestNodeFound.Value.startIndex = nodeToMake.size + 1 + nodeToMake.startIndex;
-                bestNodeFound.Value.size -= nodeToMake.size + 1;
+                bestNodeFound.Value.size -= (nodeToMake.size + 1);
             } else
             {
                 Console.WriteLine("OOps, we ran out of spacE?? " + filledSize + " / " + sizeKB);
@@ -230,7 +230,7 @@ namespace Lab8_OS_Dimchuk
                         if (bothSidesMergeNeeded)
                         {
                             start = current.Previous.Value.startIndex;
-                            size = current.Previous.Value.size + current.Value.size + current.Next.Value.size;
+                            size = current.Previous.Value.size + current.Value.size + current.Next.Value.size + 1; //adding 1 counts the zero spot
 
                             nodeToAddBeforeTo = current.Previous;
                             nodesToRemove.Add(current.Previous);
@@ -241,7 +241,7 @@ namespace Lab8_OS_Dimchuk
                         else if (leftMergeNeeded)
                         {
                             start = current.Previous.Value.startIndex;
-                            size = current.Previous.Value.size + current.Value.size;
+                            size = current.Previous.Value.size + current.Value.size + 1; //adding 1 counts the zero spot
 
                             nodeToAddBeforeTo = current.Previous;
                             nodesToRemove.Add(current.Previous);
@@ -251,7 +251,7 @@ namespace Lab8_OS_Dimchuk
                         else if (rightMergeNeeded)
                         {
                             start = current.Value.startIndex;
-                            size = current.Next.Value.size + current.Value.size;
+                            size = current.Next.Value.size + current.Value.size + 1; //adding 1 counts the zero spot
 
                             nodeToAddBeforeTo = current;
                             nodesToRemove.Add(current.Next);
