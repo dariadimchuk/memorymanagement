@@ -5,6 +5,8 @@ namespace Lab8_OS_Dimchuk
 {
     class Program
     {
+        public static int NO_PROCESS = -1;
+
         static AlgorithmType type;
         static int sizeKB;
         public static LinkedList<Node> memory = new LinkedList<Node>();
@@ -24,11 +26,17 @@ namespace Lab8_OS_Dimchuk
             type = Convert(int.Parse(text[0]));
             sizeKB = int.Parse(text[1]);
 
+            memory.AddFirst(new Node { startIndex = 0, size = sizeKB, processId = NO_PROCESS, full = false });
+
+            Console.WriteLine("\nBeginning of program:");
+            PrintDetails();
+
 
             //start at index 2 to skip algorithm type & size of memory
-            for(var i = 2; i < text.Length; i++)
+            for (var i = 2; i < text.Length; i++)
             {
                 DetermineFunction(text[i]);
+                PrintDetails();
             }
         }
 
@@ -53,11 +61,13 @@ namespace Lab8_OS_Dimchuk
                 //option 2 - deallocate memory for process with id PID
                 if (function == "D")
                 {
+                    Console.WriteLine("\nDeallocating process " + processId);
                     GenericDeallocation(processId);
 
                 }
                 else if (function == "A") //option 1 - allocate a memory with id PID, that's size MEMORY_SIZE. Unit would be in KBs.
                 {
+                    Console.WriteLine("\nAllocating for process " + processId);
                     int size = int.Parse(instructions[2]);
                     GenericAllocation(processId, size);
                 }
@@ -74,71 +84,48 @@ namespace Lab8_OS_Dimchuk
 
             var nodeToMake = new Node { processId = id, size = size, full = true};
 
-            if (memory.First == null)
+            //int index = memory.First.Value.size; //first valid index after 1st node
+
+            var success = false;
+
+            //completely empty linkedlist
+            if(memory.First.Next == null)
             {
                 nodeToMake.startIndex = 0;
-                memory.AddFirst(nodeToMake);
+                memory.AddBefore(memory.First, nodeToMake);
+                memory.First.Next.Value.startIndex = nodeToMake.size + 1;
+                memory.First.Next.Value.size -= nodeToMake.size + 1;
+                success = true;
             }
             else
             {
-                //int index = memory.First.Value.size; //first valid index after 1st node
-
-                int index = 0;
                 var current = memory.First;
-                for(int i = 0; i < memory.Count; i++)
+                while(current != null)
                 {
-                    nodeToMake.startIndex = index;
+                    nodeToMake.startIndex = current.Value.startIndex;
 
-                    //when empty block in middle, check size
-                    if (!current.Value.full)
+                    //if empty and fits our size
+                    if (!current.Value.full && current.Value.size >= size)
                     {
-                        if (current.Next != null)
-                        {
-                            //this will be broken if you dont merge empty blocks
-                            var emptyBlockSize = current.Value.startIndex + current.Next.Value.startIndex;
-                            if (emptyBlockSize <= size) //if enough space, replace, otherwise move on
-                            {
-                                //replace this node
-                                memory.AddBefore(current, nodeToMake);
-                                memory.Remove(current);
-                            }
-                        }
-                        else if (filledSize <= sizeKB)
-                        {
-                            //replace this node
-                            memory.AddBefore(current, nodeToMake);
-                            memory.Remove(current);
-                        }
-                        else Console.WriteLine("ERROR - adding first, because ran out of size?");
-                    }
+                        memory.AddBefore(current, nodeToMake);
 
-                    //TODO missing here, adding a new node if we got to the very end/...
+                        current.Value.startIndex = nodeToMake.size + 1 + nodeToMake.startIndex;
+                        current.Value.size -= nodeToMake.size + 1;
 
-
-
-                    if(current.Value.size == 0)
-                    {
-                        //this is an empty block in the middle
-                        if (current.Next?.Value != null && current.Next.Value.startIndex != 0)
-                        {
-                            index += current.Next.Value.startIndex;
-                        }
-                        else //this is an empty block at the end 
-                        {
-                            index += (sizeKB - filledSize);
-                        }
-                    }
-                    else
-                    {
-                        index += current.Value.size;
+                        success = true;
+                        break;
                     }
 
                     current = current.Next;
                 }
-
             }
 
 
+            if (!success)
+            {
+                Console.WriteLine("OOps, we ran out of spacE?? " + filledSize + " / " + sizeKB);
+                //maybe add call do do compaction???
+            }
         }
 
         static void Allocate_Best(int id, int size)
@@ -160,6 +147,82 @@ namespace Lab8_OS_Dimchuk
         {
             //filledSize -= size;
             //always check the neighbours to see if you can merge empty blocks
+
+            var current = memory.First;
+            while(current != null)
+            {
+                //found!
+                if (current.Value.processId == id)
+                {
+                    current.Value.full = false;
+                    current.Value.processId = NO_PROCESS;
+                    filledSize -= current.Value.size;
+
+
+
+                    var leftMergeNeeded = current.Previous != null && !current.Previous.Value.full;
+                    var rightMergeNeeded = current.Next != null && !current.Next.Value.full;
+                    var bothSidesMergeNeeded = leftMergeNeeded && rightMergeNeeded;
+
+                    var anyMergeNeeded = leftMergeNeeded | rightMergeNeeded;
+
+                    if (anyMergeNeeded)
+                    {
+                        //in case we need to merge some empty blocks together
+                        var start = 0;
+                        var size = 0;
+                        LinkedListNode<Node> nodeToAddBeforeTo = null;
+                        var nodesToRemove = new List<LinkedListNode<Node>>();
+
+                        //if both neighbours on each side is empty, remove and merge sides
+                        if (bothSidesMergeNeeded)
+                        {
+                            start = current.Previous.Value.startIndex;
+                            size = current.Previous.Value.size + current.Value.size + current.Next.Value.size;
+
+                            nodeToAddBeforeTo = current.Previous;
+                            nodesToRemove.Add(current.Previous);
+                            nodesToRemove.Add(current.Next);
+                            nodesToRemove.Add(current);
+                        }
+                        //if just prev neighbour is empty
+                        else if (leftMergeNeeded)
+                        {
+                            start = current.Previous.Value.startIndex;
+                            size = current.Previous.Value.size + current.Value.size;
+
+                            nodeToAddBeforeTo = current.Previous;
+                            nodesToRemove.Add(current.Previous);
+                            nodesToRemove.Add(current);
+                        }
+                        //if just next neighbour is empty
+                        else if (rightMergeNeeded)
+                        {
+                            start = current.Value.startIndex;
+                            size = current.Next.Value.size + current.Value.size;
+
+                            nodeToAddBeforeTo = current;
+                            nodesToRemove.Add(current.Next);
+                            nodesToRemove.Add(current);
+                        }
+
+
+                        var node = new Node { processId = NO_PROCESS, startIndex = start, size = size, full = false };
+                        memory.AddBefore(nodeToAddBeforeTo, node);
+
+                        foreach (var rmv in nodesToRemove)
+                        {
+                            memory.Remove(rmv);
+                        }
+                    }//merging area done
+
+                    break;
+                }
+
+                current = current.Next;
+            }
+
+
         }
 
         static void Deallocate_Best(int id)
@@ -179,7 +242,22 @@ namespace Lab8_OS_Dimchuk
 
         static void PrintDetails()
         {
-            Console.WriteLine("PRINTING...");
+            Console.WriteLine("\nPRINTING...");
+
+            var current = memory.First;
+            while(current != null)
+            {
+                var start = current.Value.startIndex;
+                var end = current.Value.startIndex + current.Value.size;
+
+                var id = current.Value.processId != NO_PROCESS ? "process " + current.Value.processId : "";
+                var state = current.Value.full ? " full" : " EMPTY";
+                var size = current.Value.size;
+
+                Console.WriteLine("[" + start + " - " + end + "]" + " - " + id + state + " size: " + size);
+
+                current = current.Next;
+            }
         }
 
 
