@@ -1,0 +1,11 @@
+C:\Users\Daria\Documents\BCIT\CST\Term 4\OS\lab8-MM-assignment-java\Lab8_OS_Dimchuk\Lab8_OS_Dimchuk\bin\Debug\netcoreapp2.1\Lab8_OS_Dimchuk.deps.json
+C:\Users\Daria\Documents\BCIT\CST\Term 4\OS\lab8-MM-assignment-java\Lab8_OS_Dimchuk\Lab8_OS_Dimchuk\bin\Debug\netcoreapp2.1\Lab8_OS_Dimchuk.runtimeconfig.json
+C:\Users\Daria\Documents\BCIT\CST\Term 4\OS\lab8-MM-assignment-java\Lab8_OS_Dimchuk\Lab8_OS_Dimchuk\bin\Debug\netcoreapp2.1\Lab8_OS_Dimchuk.runtimeconfig.dev.json
+C:\Users\Daria\Documents\BCIT\CST\Term 4\OS\lab8-MM-assignment-java\Lab8_OS_Dimchuk\Lab8_OS_Dimchuk\bin\Debug\netcoreapp2.1\Lab8_OS_Dimchuk.dll
+C:\Users\Daria\Documents\BCIT\CST\Term 4\OS\lab8-MM-assignment-java\Lab8_OS_Dimchuk\Lab8_OS_Dimchuk\bin\Debug\netcoreapp2.1\Lab8_OS_Dimchuk.pdb
+C:\Users\Daria\Documents\BCIT\CST\Term 4\OS\lab8-MM-assignment-java\Lab8_OS_Dimchuk\Lab8_OS_Dimchuk\obj\Debug\netcoreapp2.1\Lab8_OS_Dimchuk.csprojAssemblyReference.cache
+C:\Users\Daria\Documents\BCIT\CST\Term 4\OS\lab8-MM-assignment-java\Lab8_OS_Dimchuk\Lab8_OS_Dimchuk\obj\Debug\netcoreapp2.1\Lab8_OS_Dimchuk.csproj.CoreCompileInputs.cache
+C:\Users\Daria\Documents\BCIT\CST\Term 4\OS\lab8-MM-assignment-java\Lab8_OS_Dimchuk\Lab8_OS_Dimchuk\obj\Debug\netcoreapp2.1\Lab8_OS_Dimchuk.AssemblyInfoInputs.cache
+C:\Users\Daria\Documents\BCIT\CST\Term 4\OS\lab8-MM-assignment-java\Lab8_OS_Dimchuk\Lab8_OS_Dimchuk\obj\Debug\netcoreapp2.1\Lab8_OS_Dimchuk.AssemblyInfo.cs
+C:\Users\Daria\Documents\BCIT\CST\Term 4\OS\lab8-MM-assignment-java\Lab8_OS_Dimchuk\Lab8_OS_Dimchuk\obj\Debug\netcoreapp2.1\Lab8_OS_Dimchuk.dll
+C:\Users\Daria\Documents\BCIT\CST\Term 4\OS\lab8-MM-assignment-java\Lab8_OS_Dimchuk\Lab8_OS_Dimchuk\obj\Debug\netcoreapp2.1\Lab8_OS_Dimchuk.pdb
