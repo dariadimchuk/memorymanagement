@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Lab8_OS_Dimchuk
 {
-    class Program
+    public class Program
     {
         public static int NO_PROCESS = -1;
 
@@ -18,7 +18,7 @@ namespace Lab8_OS_Dimchuk
 
             Console.WriteLine("Please enter path for file of text instructions: ");
             //var path = Console.ReadLine();
-            var path = @"C:\Users\Daria\Documents\BCIT\CST\Term 4\OS\lab8-MM-assignment-java\test2.txt";
+            var path = @"C:\Users\Daria\Documents\BCIT\CST\Term 4\OS\lab8-MM-assignment-java\test.txt";
 
             var text = System.IO.File.ReadAllLines(@path);
 
@@ -29,6 +29,8 @@ namespace Lab8_OS_Dimchuk
             memory.AddFirst(new Node { startIndex = 0, size = sizeKB, processId = NO_PROCESS, full = false });
 
             Console.WriteLine("\nBeginning of program:");
+            var algorithm = type == AlgorithmType.First ? " First" : ( type == AlgorithmType.Best ? "Best" : "Worst") + " Algorithm";
+            Console.WriteLine("Type: " + algorithm + "\nTotal Size: " + sizeKB + "KB");
             PrintDetails();
 
 
@@ -128,18 +130,74 @@ namespace Lab8_OS_Dimchuk
             }
         }
 
-        static void Allocate_Best(int id, int size)
+
+
+        static void Allocate_Best_Or_Worst(int id, int size)
         {
             filledSize += size;
 
+            var nodeToMake = new Node { processId = id, size = size, full = true };
+
+            LinkedListNode<Node> bestNodeFound = null;
+            int lastSize = -1;
+
+            //completely empty linkedlist
+            if (memory.First.Next == null)
+            {
+                nodeToMake.startIndex = 0;
+                memory.AddBefore(memory.First, nodeToMake);
+                memory.First.Next.Value.startIndex = nodeToMake.size + 1;
+                memory.First.Next.Value.size -= nodeToMake.size + 1;
+                return;
+            }
+            else
+            {
+                var current = memory.First;
+                while (current != null)
+                {
+                    nodeToMake.startIndex = current.Value.startIndex;
+
+                    //if empty and fits our size
+                    if (!current.Value.full && current.Value.size >= size)
+                    {
+                        if(type == AlgorithmType.Best)
+                        {
+                            //if lastSize wasn't initialized by first linkedlist item
+                            if (lastSize == -1 || lastSize >= current.Value.size)
+                            {
+                                bestNodeFound = current;
+                                lastSize = current.Value.size;
+                            }
+                        } else if(type == AlgorithmType.Worst)
+                        {
+                            //if lastSize wasn't initialized by first linkedlist item
+                            if (lastSize == -1 || lastSize <= current.Value.size)
+                            {
+                                bestNodeFound = current;
+                                lastSize = current.Value.size;
+                            }
+                        }                        
+                    }
+
+                    current = current.Next;
+                }
+            }
+
+            if(bestNodeFound != null)
+            {
+                //add 
+                memory.AddBefore(bestNodeFound, nodeToMake);
+
+                bestNodeFound.Value.startIndex = nodeToMake.size + 1 + nodeToMake.startIndex;
+                bestNodeFound.Value.size -= nodeToMake.size + 1;
+            } else
+            {
+                Console.WriteLine("OOps, we ran out of spacE?? " + filledSize + " / " + sizeKB);
+                //maybe add call do do compaction???
+            }
+
         }
 
-
-        static void Allocate_Worst(int id, int size)
-        {
-            filledSize += size;
-
-        }
 
         /*      DEALLOCATION METHODS      */
 
@@ -154,8 +212,6 @@ namespace Lab8_OS_Dimchuk
                     current.Value.full = false;
                     current.Value.processId = NO_PROCESS;
                     filledSize -= current.Value.size;
-
-
 
                     var leftMergeNeeded = current.Previous != null && !current.Previous.Value.full;
                     var rightMergeNeeded = current.Next != null && !current.Next.Value.full;
@@ -236,10 +292,14 @@ namespace Lab8_OS_Dimchuk
                 var end = current.Value.startIndex + current.Value.size;
 
                 var id = current.Value.processId != NO_PROCESS ? "process " + current.Value.processId : "";
-                var state = current.Value.full ? " full" : " EMPTY";
-                var size = current.Value.size;
+                var state = current.Value.full ? "FULL" : "EMPTY";
+                var size = "size " + current.Value.size;
 
-                Console.WriteLine("[" + start + " - " + end + "]" + " - " + id + state + " size: " + size);
+                Console.WriteLine(string.Format("[{0, -5} - {1, -5}] ({2, -5}) - {3, 10} {4, 10}",
+                                    start, end, state, size, id));
+
+
+                //Console.WriteLine("[" + start + " - " + end + "]" + " - " + state + "  - "+ id + " size " + size);
 
                 current = current.Next;
             }
@@ -253,13 +313,9 @@ namespace Lab8_OS_Dimchuk
             {
                 Allocate_First(id, size);
             }
-            else if (type == AlgorithmType.Best)
+            else
             {
-                Allocate_Best(id, size);
-            }
-            else if (type == AlgorithmType.Worst)
-            {
-                Allocate_Worst(id, size);
+                Allocate_Best_Or_Worst(id, size);
             }
         }
 
