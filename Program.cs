@@ -155,8 +155,6 @@ namespace Lab8_OS_Dimchuk
                 var current = memory.First;
                 while (current != null)
                 {
-                    nodeToMake.startIndex = current.Value.startIndex;
-
                     //if empty and fits our size
                     if (!current.Value.full && current.Value.size >= size)
                     {
@@ -186,6 +184,7 @@ namespace Lab8_OS_Dimchuk
             if(bestNodeFound != null)
             {
                 //add 
+                nodeToMake.startIndex = bestNodeFound.Value.startIndex;
                 memory.AddBefore(bestNodeFound, nodeToMake);
 
                 bestNodeFound.Value.startIndex = nodeToMake.size + 1 + nodeToMake.startIndex;
