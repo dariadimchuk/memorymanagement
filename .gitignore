@@ -1,10 +1,4 @@
-/obj/Debug/netcoreapp2.1/Lab8_OS_Dimchuk.pdb
-/obj/Debug/netcoreapp2.1/Lab8_OS_Dimchuk.dll
-/obj/Debug/netcoreapp2.1/Lab8_OS_Dimchuk.csprojAssemblyReference.cache
-/bin/Debug/netcoreapp2.1/Lab8_OS_Dimchuk.pdb
-/bin/Debug/netcoreapp2.1/Lab8_OS_Dimchuk.dll
-/bin/Debug/netcoreapp2.1/Lab8_OS_Dimchuk.dll
-/bin/Debug/netcoreapp2.1/Lab8_OS_Dimchuk.pdb
-/obj/Debug/netcoreapp2.1/Lab8_OS_Dimchuk.dll
-/obj/Debug/netcoreapp2.1/Lab8_OS_Dimchuk.pdb
-/obj/Debug/netcoreapp2.1/Lab8_OS_Dimchuk.csprojAssemblyReference.cache
+/bin/Debug/
+/obj/Debug/
+/obj/Debug/*
+/bin/Debug/*
